@@ -1,21 +1,33 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import argparse
+import sys
 
+myParser = argparse.ArgumentParser(description='This script does things with numbers')
+myParser.add_argument(
+                    '--amount',
+                    metavar='A',
+                    type=float,
+                    help='the amount to split',
+                    dest='amountToSplit'
+                    )
+myParser.add_argument(
+                    '--days',
+                    default=42,
+                    metavar='D',
+                    type=int,
+                    help='days from now until the last payment is made',
+                    dest='daysToLastPayment'
+                    )
 
-#import argparse
-#
-#parser = argparse.ArgumentParser(description='Process some integers.')
-#parser.add_argument('integers', metavar='N', type=int, nargs='+',
-#                    help='an integer for the accumulator')
-#parser.add_argument('--sum', dest='accumulate', action='store_const',
-#                    const=sum, default=max,
-#                    help='sum the integers (default: find the max)')
-#
-#args = parser.parse_args()
-#print(args.accumulate(args.integers))
+myArgs = myParser.parse_args()
+print(myArgs)
+print('amount to split=',myArgs.amountToSplit)
+print('days to last payment=',myArgs.daysToLastPayment)
 
-
+# don't go further so far : we're playing with the argument parser
+sys.exit(42)
 
 
 
