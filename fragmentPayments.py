@@ -19,69 +19,17 @@
 
 
 
-## source : https://stackoverflow.com/a/50604179/2312935
-## principe : on a un livre de N pages. On va insérer n marques-pages aléatoirement dans le livre pour le séparer en n+1 parties de longueurs aléatoires
-#import random
-#numberToSplit = 11
-#initialValuePerSplit = 2
-#numberOfSplits = 3
+# The method to split any number N into n numbers that sum to N is to :
+# - consider a book having N pages
+# - place n-1 bookmarks randomly inside the book
+# - the n random numbers are the number of pages of each segment
 #
-#remaining = numberToSplit - initialValuePerSplit * numberOfSplits
-## 11-2*3=5
+# If you add the extra constraint that all splits must be > x :
+# - subtract (n*x) from the book length
+# - share the remaining
+# - then add x to eeach section
 #
-#listOfRandomNumbers = sorted([random.randint(0, remaining+1) for i in range(numberOfSplits)])
-##                                 0 <= random <= 6                            0, 1, 2 ==> boucle 3 fois
-## ==> liste de 3 nombres aléatoires dans le range
-#print(listOfRandomNumbers)
-## [1, 2, 5]
-#
-#listOfRandomNumbers.append(remaining)
-## on ajoute à la fin :
-## liste[dernier] = remaining (5)
-#
-#listOfRandomNumbers[0] = 0
-## on remplace le premier :
-## liste[premier] = 0
-#
-#print(listOfRandomNumbers)
-## [0, 2, 5, 5]
-#
-#print(listOfRandomNumbers[0:numberOfSplits], listOfRandomNumbers[1:numberOfSplits+1])
-## liste 1 : [0, 2, 5]
-## liste 2 : [2, 5, 5]
-#
-#result = [j-i+initialValuePerSplit for(i,j) in zip(listOfRandomNumbers[0:numberOfSplits], listOfRandomNumbers[1:numberOfSplits+1])]
-## 4, 5, 2
-#print(numberToSplit, result)
-## 11 [4, 5, 2]
-#
-## manual
-##1, 1, 1
-##1, 1, 1, 5
-##0, 1, 1, 5
-##
-##3, 2, 6
-#
-## executed
-##[0, 2, 6]
-##[0, 2, 6, 5]
-##[0, 2, 6] [2, 6, 5]
-##11 [4, 6, 1]
-
-
-
-
-
-
-#The method to split any number N into n numbers that sum to N is to :
-#- consider a book having N pages
-#- place n-1 bookmarks randomly inside the book
-#- the n random numbers are the number of pages of each segment
-#
-#If you had the extra constraint that all splits must be > x :
-#- subtract (n*x) from the book length
-#- share the remaining
-#- then add x to eeach section
+# source : https://stackoverflow.com/a/50604179/2312935
 
 
 import random
