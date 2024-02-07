@@ -2,21 +2,24 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import random
 import sys
+
 
 myParser = argparse.ArgumentParser(description='This script does things with numbers')
 myParser.add_argument(
                     '--amount',
                     metavar='A',
                     type=float,
+                    default=123.45,
                     help='the amount to split',
                     dest='amountToSplit'
                     )
 myParser.add_argument(
                     '--days',
-                    default=42,
                     metavar='D',
                     type=int,
+                    default=42,
                     help='days from now until the last payment is made',
                     dest='daysToLastPayment'
                     )
@@ -25,10 +28,6 @@ myArgs = myParser.parse_args()
 print(myArgs)
 print('amount to split=',myArgs.amountToSplit)
 print('days to last payment=',myArgs.daysToLastPayment)
-
-# don't go further so far : we're playing with the argument parser
-sys.exit(42)
-
 
 
 # The method to split any number N into n numbers that sum to N is to :
@@ -44,13 +43,15 @@ sys.exit(42)
 # source : https://stackoverflow.com/a/50604179/2312935
 
 
-import random
-numberToSplit = 9873
-minimumValuePerSplit = 456
+numberToSplit = myArgs.amountToSplit * 100	# so that we play with integers
+minimumValuePerSplit = numberToSplit / 10	# just trying...
 numberOfSplits = 7
 
 remaining = numberToSplit - minimumValuePerSplit * numberOfSplits
 print("remaining =", remaining)
+
+# don't go further so far
+sys.exit(42)
 
 listOfRandomNumbers = sorted([random.randint(0, remaining+1) for i in range(numberOfSplits)])
 print(listOfRandomNumbers)
