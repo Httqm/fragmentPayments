@@ -3,7 +3,7 @@
 
 import argparse
 import random
-import sys
+#import sys
 
 
 myParser = argparse.ArgumentParser(description='This script does things with numbers')
@@ -25,7 +25,7 @@ myParser.add_argument(
                     )
 
 myArgs = myParser.parse_args()
-print(myArgs)
+#print(myArgs)
 print('amount to split=',myArgs.amountToSplit)
 print('days to last payment=',myArgs.daysToLastPayment)
 
@@ -42,22 +42,20 @@ print('days to last payment=',myArgs.daysToLastPayment)
 #
 # source : https://stackoverflow.com/a/50604179/2312935
 
-
-numberToSplit = myArgs.amountToSplit * 100	# so that we play with integers
-minimumValuePerSplit = numberToSplit / 10	# just trying...
+INTEGER_RATIO = 100
+numberToSplit = myArgs.amountToSplit * INTEGER_RATIO	# so that we play with integers
+minimumValuePerSplit = round(numberToSplit / 20)	# just trying...
+#print("minimumValuePerSplit =", minimumValuePerSplit)
 numberOfSplits = 7
 
-remaining = numberToSplit - minimumValuePerSplit * numberOfSplits
-print("remaining =", remaining)
-
 # don't go further so far
-sys.exit(42)
+#sys.exit(42)
+
+remaining = numberToSplit - minimumValuePerSplit * numberOfSplits
+#print("remaining =", remaining)
 
 listOfRandomNumbers = sorted([random.randint(0, remaining+1) for i in range(numberOfSplits)])
-print(listOfRandomNumbers)
-
-#listOfRandomNumbers.append(remaining)
-#listOfRandomNumbers[0] = 0
+#print(listOfRandomNumbers)
 
 listOfRandomNumbers.append(remaining+1)
 # "remaining+1" because otherwise, there is the risk that listOfRandomNumbers ends on :
@@ -67,11 +65,12 @@ listOfRandomNumbers.append(remaining+1)
 # then, when we finally add 'minimumValuePerSplit'
 # this gives a number that is less than 'minimumValuePerSplit'
 listOfRandomNumbers[0] = 1
-print(listOfRandomNumbers)
+#print(listOfRandomNumbers)
+
 
 #print(listOfRandomNumbers[0:numberOfSplits], listOfRandomNumbers[1:numberOfSplits+1])
 # liste 1 : [0, 2, 5]
 # liste 2 : [2, 5, 5]
 
-result = [j-i+minimumValuePerSplit for(i,j) in zip(listOfRandomNumbers[0:numberOfSplits], listOfRandomNumbers[1:numberOfSplits+1])]
-print(numberToSplit, result, sum(result))
+result = [ (j-i+minimumValuePerSplit) / INTEGER_RATIO for(i,j) in zip(listOfRandomNumbers[0:numberOfSplits], listOfRandomNumbers[1:numberOfSplits+1])]
+print(myArgs.amountToSplit, result, sum(result), myArgs.amountToSplit-sum(result))
