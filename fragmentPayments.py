@@ -8,21 +8,21 @@ import random
 
 myParser = argparse.ArgumentParser(description='This script does things with numbers')
 myParser.add_argument(
-                    '--amount',
-                    metavar='A',
-                    type=float,
-                    default=123.45,
-                    help='the amount to split',
-                    dest='amountToSplit'
-                    )
+                      '--amount',
+                      metavar='A',
+                      type=float,
+                      default=123.45,
+                      help='the amount to split',
+                      dest='amountToSplit'
+                      )
 myParser.add_argument(
-                    '--days',
-                    metavar='D',
-                    type=int,
-                    default=42,
-                    help='days from now until the last payment is made',
-                    dest='daysToLastPayment'
-                    )
+                      '--days',
+                      metavar='D',
+                      type=int,
+                      default=42,
+                      help='days from now until the last payment is made',
+                      dest='daysToLastPayment'
+                      )
 
 myArgs = myParser.parse_args()
 #print(myArgs)
@@ -41,36 +41,45 @@ print('days to last payment=',myArgs.daysToLastPayment)
 # - then add x to eeach section
 #
 # source : https://stackoverflow.com/a/50604179/2312935
+def splitAmountOfCash(amountToSplit, numberOfSplits):
 
-INTEGER_RATIO = 100
-numberToSplit = myArgs.amountToSplit * INTEGER_RATIO	# so that we play with integers
-minimumValuePerSplit = round(numberToSplit / 20)	# just trying...
-#print("minimumValuePerSplit =", minimumValuePerSplit)
+    INTEGER_RATIO = 100
+    numberToSplit = amountToSplit * INTEGER_RATIO		# so that we play with integers
+    minimumValuePerSplit = round(numberToSplit / 20)	# just trying...
+    #print("minimumValuePerSplit =", minimumValuePerSplit)
+
+    # don't go further so far
+    #sys.exit(42)
+
+    remaining = numberToSplit - minimumValuePerSplit * numberOfSplits
+    #print("remaining =", remaining)
+
+    listOfRandomNumbers = sorted([random.randint(0, remaining+1) for i in range(numberOfSplits)])
+    #print(listOfRandomNumbers)
+
+    listOfRandomNumbers.append(remaining+1)
+    # "remaining+1" because otherwise, there is the risk that listOfRandomNumbers ends on :
+    # ..., remaining+1, remaining ]
+    # then, on the final stage (which computes x_n - x_(n-1) for number of that list) :
+    # remaining - (remaining+1) = -1
+    # then, when we finally add 'minimumValuePerSplit'
+    # this gives a number that is less than 'minimumValuePerSplit'
+    listOfRandomNumbers[0] = 1
+    #print(listOfRandomNumbers)
+
+    #print(listOfRandomNumbers[0:numberOfSplits], listOfRandomNumbers[1:numberOfSplits+1])
+    # liste 1 : [0, 2, 5]
+    # liste 2 : [2, 5, 5]
+
+    return [ (j-i+minimumValuePerSplit) / INTEGER_RATIO for(i,j) in zip(listOfRandomNumbers[0:numberOfSplits], listOfRandomNumbers[1:numberOfSplits+1])]
+
+
+def splitDelay():
+    pass
+
+
 numberOfSplits = 7
-
-# don't go further so far
-#sys.exit(42)
-
-remaining = numberToSplit - minimumValuePerSplit * numberOfSplits
-#print("remaining =", remaining)
-
-listOfRandomNumbers = sorted([random.randint(0, remaining+1) for i in range(numberOfSplits)])
-#print(listOfRandomNumbers)
-
-listOfRandomNumbers.append(remaining+1)
-# "remaining+1" because otherwise, there is the risk that listOfRandomNumbers ends on :
-# ..., remaining+1, remaining ]
-# then, on the final stage (which computes x_n - x_(n-1) for number of that list) :
-# remaining - (remaining+1) = -1
-# then, when we finally add 'minimumValuePerSplit'
-# this gives a number that is less than 'minimumValuePerSplit'
-listOfRandomNumbers[0] = 1
-#print(listOfRandomNumbers)
+splitted = splitAmountOfCash(myArgs.amountToSplit, numberOfSplits)
 
 
-#print(listOfRandomNumbers[0:numberOfSplits], listOfRandomNumbers[1:numberOfSplits+1])
-# liste 1 : [0, 2, 5]
-# liste 2 : [2, 5, 5]
-
-result = [ (j-i+minimumValuePerSplit) / INTEGER_RATIO for(i,j) in zip(listOfRandomNumbers[0:numberOfSplits], listOfRandomNumbers[1:numberOfSplits+1])]
-print(myArgs.amountToSplit, result, sum(result), myArgs.amountToSplit-sum(result))
+print(myArgs.amountToSplit, splitted, sum(splitted), myArgs.amountToSplit-sum(splitted))
