@@ -20,14 +20,14 @@ myParser.add_argument(
                       metavar='D',
                       type=int,
                       default=42,
-                      help='days from now until the last payment is made',
-                      dest='daysToLastPayment'
+                      help='days from now until the end',
+                      dest='daysToTheEnd'
                       )
 
 myArgs = myParser.parse_args()
 #print(myArgs)
 print('amount to split=',myArgs.amountToSplit)
-print('days to last payment=',myArgs.daysToLastPayment)
+print('days to the end=',myArgs.daysToTheEnd)
 
 
 # The method to split any number N into n numbers that sum to N is to :
@@ -42,7 +42,6 @@ print('days to last payment=',myArgs.daysToLastPayment)
 #
 # source : https://stackoverflow.com/a/50604179/2312935
 def splitAmountOfCash(amountToSplit, numberOfSplits):
-
     INTEGER_RATIO = 100
     numberToSplit = amountToSplit * INTEGER_RATIO		# so that we play with integers
     minimumValuePerSplit = round(numberToSplit / 20)	# just trying...
@@ -74,12 +73,32 @@ def splitAmountOfCash(amountToSplit, numberOfSplits):
     return [ (j-i+minimumValuePerSplit) / INTEGER_RATIO for(i,j) in zip(listOfRandomNumbers[0:numberOfSplits], listOfRandomNumbers[1:numberOfSplits+1])]
 
 
-def splitDelay():
-    pass
+# TODO: make a function to generate a random sequence
+def splitDays(daysToSplit, numberOfSplits):
+    INITIAL_WAIT_DAYS = 12	# TODO: randomize this
+    MINIMUM_INTERVAL_DAYS = 2
+
+    daysRemainingToSplit = daysToSplit - INITIAL_WAIT_DAYS - (numberOfSplits * MINIMUM_INTERVAL_DAYS)
+    print("daysRemainingToSplit =",daysRemainingToSplit)
+
+    listOfRandomNumbers = sorted([random.randint(0, daysRemainingToSplit+1) for i in range(numberOfSplits)])
+    print("listOfRandomNumbers (generated) : ",listOfRandomNumbers)
+
+    listOfRandomNumbers.append(daysRemainingToSplit + 1)
+    listOfRandomNumbers[0] = 1
+    print("listOfRandomNumbers (first,last) : ",listOfRandomNumbers)
+
+    print ( [ j-i+MINIMUM_INTERVAL_DAYS for(i,j) in zip(listOfRandomNumbers[0:numberOfSplits], listOfRandomNumbers[1:numberOfSplits+1])] )
+
+
+
+
 
 
 numberOfSplits = 7
 splitted = splitAmountOfCash(myArgs.amountToSplit, numberOfSplits)
-
-
 print(myArgs.amountToSplit, splitted, sum(splitted), myArgs.amountToSplit-sum(splitted))
+
+
+
+splitDays(myArgs.daysToTheEnd, numberOfSplits)
