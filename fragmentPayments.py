@@ -102,3 +102,28 @@ print(myArgs.amountToSplit, splitted, sum(splitted), myArgs.amountToSplit-sum(sp
 
 
 splitDays(myArgs.daysToTheEnd, numberOfSplits)
+
+
+
+
+
+def slice(totalLength, numberOfSlices, fixedFirstSliceLength, minimumSliceLength):
+
+    if (fixedFirstSliceLength != 0):
+        numberOfSlices = numberOfSlices - 1
+
+    lengthToSlice = totalLength - fixedFirstSliceLength - (numberOfSlices * minimumSliceLength)
+    listOfRandomNumbers = sorted([random.randint(0, lengthToSlice + 1) for i in range(numberOfSlices)])
+    listOfRandomNumbers.append(lengthToSlice + 1)
+    listOfRandomNumbers[0] = 1
+    result = [ j-i+minimumSliceLength for(i,j) in zip(listOfRandomNumbers[0:numberOfSlices], listOfRandomNumbers[1:numberOfSlices+1])]
+
+    if (fixedFirstSliceLength != 0):
+        result.insert(0, fixedFirstSliceLength)
+
+    return result
+
+
+
+truc=slice(11456, 8, 540, 360)
+print(truc, sum(truc))
