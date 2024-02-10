@@ -31,25 +31,6 @@ print('days to the end=',myArgs.daysToTheEnd)
 
 
 
-# TODO: make a function to generate a random sequence
-def splitDays(daysToSplit, numberOfSplits):
-    INITIAL_WAIT_DAYS = 12	# TODO: randomize this
-    MINIMUM_INTERVAL_DAYS = 2
-
-    daysRemainingToSplit = daysToSplit - INITIAL_WAIT_DAYS - (numberOfSplits * MINIMUM_INTERVAL_DAYS)
-    print("daysRemainingToSplit =",daysRemainingToSplit)
-
-    listOfRandomNumbers = sorted([random.randint(0, daysRemainingToSplit+1) for i in range(numberOfSplits)])
-    print("listOfRandomNumbers (generated) : ",listOfRandomNumbers)
-
-    listOfRandomNumbers.append(daysRemainingToSplit + 1)
-    listOfRandomNumbers[0] = 1
-    print("listOfRandomNumbers (first,last) : ",listOfRandomNumbers)
-
-    print ( [ j-i+MINIMUM_INTERVAL_DAYS for(i,j) in zip(listOfRandomNumbers[0:numberOfSplits], listOfRandomNumbers[1:numberOfSplits+1])] )
-
-
-
 # The method to split any number N into n numbers that sum to N is to :
 # - consider a book having N pages
 # - place n-1 bookmarks randomly inside the book
