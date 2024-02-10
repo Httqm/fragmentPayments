@@ -92,38 +92,46 @@ def splitDays(daysToSplit, numberOfSplits):
 
 
 
+def slice(totalLength, numberOfSlices, fixedFirstSliceLength, minimumSliceLength, ratio=1):
 
-
-
-numberOfSplits = 7
-splitted = splitAmountOfCash(myArgs.amountToSplit, numberOfSplits)
-print(myArgs.amountToSplit, splitted, sum(splitted), myArgs.amountToSplit-sum(splitted))
-
-
-
-splitDays(myArgs.daysToTheEnd, numberOfSplits)
-
-
-
-
-
-def slice(totalLength, numberOfSlices, fixedFirstSliceLength, minimumSliceLength):
+    totalLength = totalLength * ratio
+    fixedFirstSliceLength = fixedFirstSliceLength * ratio
+    minimumSliceLength = minimumSliceLength * ratio
 
     if (fixedFirstSliceLength != 0):
         numberOfSlices = numberOfSlices - 1
 
     lengthToSlice = totalLength - fixedFirstSliceLength - (numberOfSlices * minimumSliceLength)
-    listOfRandomNumbers = sorted([random.randint(0, lengthToSlice + 1) for i in range(numberOfSlices)])
+#    print("minimumSliceLength", minimumSliceLength)
+#    print("lengthToSlice = ",lengthToSlice)
+    listOfRandomNumbers = sorted([random.randint(0, round(lengthToSlice + 1)) for i in range(numberOfSlices)])
     listOfRandomNumbers.append(lengthToSlice + 1)
     listOfRandomNumbers[0] = 1
-    result = [ j-i+minimumSliceLength for(i,j) in zip(listOfRandomNumbers[0:numberOfSlices], listOfRandomNumbers[1:numberOfSlices+1])]
+    result = [ (j-i+minimumSliceLength)/ratio for(i,j) in zip(listOfRandomNumbers[0:numberOfSlices], listOfRandomNumbers[1:numberOfSlices+1])]
 
     if (fixedFirstSliceLength != 0):
-        result.insert(0, fixedFirstSliceLength)
+        result.insert(0, fixedFirstSliceLength/ratio)
 
     return result
 
 
 
-truc=slice(11456, 8, 540, 360)
-print(truc, sum(truc))
+
+numberOfSplits = 7
+splitted = splitAmountOfCash(myArgs.amountToSplit, numberOfSplits)
+print(splitted, "\t", sum(splitted), "\t", myArgs.amountToSplit-sum(splitted))
+
+
+
+cash=slice( totalLength           = myArgs.amountToSplit,
+            numberOfSlices        = numberOfSplits,
+            fixedFirstSliceLength = 0,
+            minimumSliceLength    = round(myArgs.amountToSplit/20),
+            ratio                 = 100
+            )
+
+print(cash, "\t", sum(cash), "\t", myArgs.amountToSplit-sum(cash))
+
+
+
+#splitDays(myArgs.daysToTheEnd, numberOfSplits)
