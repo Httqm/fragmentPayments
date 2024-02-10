@@ -30,48 +30,6 @@ print('amount to split=',myArgs.amountToSplit)
 print('days to the end=',myArgs.daysToTheEnd)
 
 
-# The method to split any number N into n numbers that sum to N is to :
-# - consider a book having N pages
-# - place n-1 bookmarks randomly inside the book
-# - the n random numbers are the number of pages of each segment
-#
-# If you add the extra constraint that all splits must be > x :
-# - subtract (n*x) from the book length
-# - share the remaining
-# - then add x to eeach section
-#
-# source : https://stackoverflow.com/a/50604179/2312935
-def splitAmountOfCash(amountToSplit, numberOfSplits):
-    INTEGER_RATIO = 100
-    numberToSplit = amountToSplit * INTEGER_RATIO		# so that we play with integers
-    minimumValuePerSplit = round(numberToSplit / 20)	# just trying...
-    #print("minimumValuePerSplit =", minimumValuePerSplit)
-
-    # don't go further so far
-    #sys.exit(42)
-
-    remaining = numberToSplit - minimumValuePerSplit * numberOfSplits
-    #print("remaining =", remaining)
-
-    listOfRandomNumbers = sorted([random.randint(0, remaining+1) for i in range(numberOfSplits)])
-    #print(listOfRandomNumbers)
-
-    listOfRandomNumbers.append(remaining+1)
-    # "remaining+1" because otherwise, there is the risk that listOfRandomNumbers ends on :
-    # ..., remaining+1, remaining ]
-    # then, on the final stage (which computes x_n - x_(n-1) for number of that list) :
-    # remaining - (remaining+1) = -1
-    # then, when we finally add 'minimumValuePerSplit'
-    # this gives a number that is less than 'minimumValuePerSplit'
-    listOfRandomNumbers[0] = 1
-    #print(listOfRandomNumbers)
-
-    #print(listOfRandomNumbers[0:numberOfSplits], listOfRandomNumbers[1:numberOfSplits+1])
-    # liste 1 : [0, 2, 5]
-    # liste 2 : [2, 5, 5]
-
-    return [ (j-i+minimumValuePerSplit) / INTEGER_RATIO for(i,j) in zip(listOfRandomNumbers[0:numberOfSplits], listOfRandomNumbers[1:numberOfSplits+1])]
-
 
 # TODO: make a function to generate a random sequence
 def splitDays(daysToSplit, numberOfSplits):
@@ -92,8 +50,20 @@ def splitDays(daysToSplit, numberOfSplits):
 
 
 
+# The method to split any number N into n numbers that sum to N is to :
+# - consider a book having N pages
+# - place n-1 bookmarks randomly inside the book
+# - the n random numbers are the number of pages of each segment
+#
+# If you add the extra constraint that all splits must be > x :
+# - subtract (n*x) from the book length
+# - share the remaining
+# - then add x to eeach section
+#
+# source : https://stackoverflow.com/a/50604179/2312935
 def slice(totalLength, numberOfSlices, fixedFirstSliceLength, minimumSliceLength, ratio=1):
 
+    # the slicing below works with integers. Multiplying everything by 100 changes amounts of cash (floats) into "integers".
     totalLength = totalLength * ratio
     fixedFirstSliceLength = fixedFirstSliceLength * ratio
     minimumSliceLength = minimumSliceLength * ratio
@@ -102,10 +72,15 @@ def slice(totalLength, numberOfSlices, fixedFirstSliceLength, minimumSliceLength
         numberOfSlices = numberOfSlices - 1
 
     lengthToSlice = totalLength - fixedFirstSliceLength - (numberOfSlices * minimumSliceLength)
-#    print("minimumSliceLength", minimumSliceLength)
-#    print("lengthToSlice = ",lengthToSlice)
     listOfRandomNumbers = sorted([random.randint(0, round(lengthToSlice + 1)) for i in range(numberOfSlices)])
     listOfRandomNumbers.append(lengthToSlice + 1)
+    # "lengthToSlice+1" because otherwise, there is the risk that listOfRandomNumbers ends on :
+    # ..., lengthToSlice+1, lengthToSlice ]
+    # then, on the final stage (which computes x_n - x_(n-1) for number of that list) :
+    # lengthToSlice - (lengthToSlice+1) = -1
+    # then, when we finally add 'minimumValuePerSplit'
+    # this gives a number that is less than 'minimumValuePerSplit'
+
     listOfRandomNumbers[0] = 1
     result = [ (j-i+minimumSliceLength)/ratio for(i,j) in zip(listOfRandomNumbers[0:numberOfSlices], listOfRandomNumbers[1:numberOfSlices+1])]
 
@@ -118,15 +93,12 @@ def slice(totalLength, numberOfSlices, fixedFirstSliceLength, minimumSliceLength
 
 
 numberOfSplits = 7
-splitted = splitAmountOfCash(myArgs.amountToSplit, numberOfSplits)
-print(splitted, "\t", sum(splitted), "\t", myArgs.amountToSplit-sum(splitted))
-
 
 
 cash=slice( totalLength           = myArgs.amountToSplit,
             numberOfSlices        = numberOfSplits,
             fixedFirstSliceLength = 0,
-            minimumSliceLength    = round(myArgs.amountToSplit/20),
+            minimumSliceLength    = round(myArgs.amountToSplit/20),	# so that I have a decent minimum amount
             ratio                 = 100
             )
 
