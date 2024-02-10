@@ -101,9 +101,13 @@ cash=slice( totalLength           = myArgs.amountToSplit,
             minimumSliceLength    = round(myArgs.amountToSplit/20),	# so that I have a decent minimum amount
             ratio                 = 100
             )
-
-print(cash, "\t", sum(cash), "\t", myArgs.amountToSplit-sum(cash))
-
+print(cash, "\t", sum(cash), "\t", myArgs.amountToSplit - sum(cash))
 
 
-#splitDays(myArgs.daysToTheEnd, numberOfSplits)
+
+days=slice( totalLength           = myArgs.daysToTheEnd,
+            numberOfSlices        = numberOfSplits,
+            fixedFirstSliceLength = 13,
+            minimumSliceLength    = 2,
+            )
+print(days, "\t", sum(days), "\t", myArgs.daysToTheEnd - sum(days))
