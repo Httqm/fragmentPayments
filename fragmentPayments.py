@@ -3,7 +3,7 @@
 
 import argparse
 import random
-#import sys
+import sys
 
 
 myParser = argparse.ArgumentParser(description='This script does things with numbers')
@@ -30,6 +30,10 @@ print('amount to split=',myArgs.amountToSplit)
 print('days to the end=',myArgs.daysToTheEnd)
 
 
+def error(errorMessage):
+    print(errorMessage)
+    sys.exit(1)
+
 
 # The method to split any number N into n numbers that sum to N is to :
 # - consider a book having N pages
@@ -43,6 +47,14 @@ print('days to the end=',myArgs.daysToTheEnd)
 #
 # source : https://stackoverflow.com/a/50604179/2312935
 def slice(totalLength, numberOfSlices, fixedFirstSliceLength, minimumSliceLength, ratio=1):
+
+    if(fixedFirstSliceLength >= totalLength):
+        error("The first fixed-length slice ('{}' given) must be shorter than \
+               the total length ('{}' given)".format(fixedFirstSliceLength, totalLength))
+
+    if(numberOfSlices * minimumSliceLength >= totalLength):
+        error("numberOfSlices ({}) * minimumSliceLength ({}) must be less than totalLength ({})".format(numberOfSlices, minimumSliceLength, totalLength))
+
 
     # the slicing below works with integers. Multiplying everything by 100 changes amounts of cash (floats) into "integers".
     totalLength = totalLength * ratio
@@ -85,12 +97,9 @@ cash=slice( totalLength           = myArgs.amountToSplit,
 print(cash, "\t", sum(cash), "\t", myArgs.amountToSplit - sum(cash))
 
 
-# TODO: check that
-# - 'fixedFirstSliceLength' < amount to split
-# - numberOfSlices * minimumSliceLength < amount to split
 delays=slice(totalLength          = myArgs.daysToTheEnd,
             numberOfSlices        = numberOfSplits,
-            fixedFirstSliceLength = 2,
+            fixedFirstSliceLength = 4,
             minimumSliceLength    = 2,
             )
 print(delays, "\t", sum(delays), "\t", myArgs.daysToTheEnd - sum(delays))
