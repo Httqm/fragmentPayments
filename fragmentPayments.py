@@ -49,22 +49,35 @@ def error(errorMessage):
 def slice(totalLength, numberOfSlices, fixedFirstSliceLength, minimumSliceLength, ratio=1):
 
     if(fixedFirstSliceLength >= totalLength):
-        error("The first fixed-length slice ('{}' given) must be shorter than \
-               the total length ('{}' given)".format(fixedFirstSliceLength, totalLength))
+        error("The fixed-value 1st split ('{}' given) must be shorter than "
+              "the amount to split ('{}' given)".format(fixedFirstSliceLength, totalLength))
 
     if(numberOfSlices * minimumSliceLength >= totalLength):
-        error("numberOfSlices ({}) * minimumSliceLength ({}) must be less than totalLength ({})".format(numberOfSlices, minimumSliceLength, totalLength))
+        error("nb of splits ({}) * min. split value ({}) must be less than "
+              "the amount to split ({})".format(numberOfSlices, minimumSliceLength, totalLength))
 
-
-    # the slicing below works with integers. Multiplying everything by 100 changes amounts of cash (floats) into "integers".
-    totalLength = totalLength * ratio
-    fixedFirstSliceLength = fixedFirstSliceLength * ratio
-    minimumSliceLength = minimumSliceLength * ratio
+    # The slicing works with integers. Multiplying everything by a 'ratio' of 100
+    # changes amounts of cash (floats) into "integers".
+    totalLength_converted = totalLength * ratio
+    fixedFirstSliceLength_converted = fixedFirstSliceLength * ratio
+    minimumSliceLength_converted = minimumSliceLength * ratio
 
     if (fixedFirstSliceLength != 0):
         numberOfSlices = numberOfSlices - 1
 
-    lengthToSlice = totalLength - fixedFirstSliceLength - (numberOfSlices * minimumSliceLength)
+    lengthToSlice = totalLength_converted - fixedFirstSliceLength_converted - (numberOfSlices * minimumSliceLength_converted)
+    print("lengthToSlice=",lengthToSlice)
+    if(lengthToSlice < -1):
+        error("Nothing left to split :\n"
+              "\tleft to split = amount to split ({}) - fixed-value 1st split ({}) - (nb of splits ({}) * min. split value ({}))\n"
+              "doesn't work. Check input values.".format(
+                totalLength_converted,
+                fixedFirstSliceLength_converted,
+                numberOfSlices,
+                minimumSliceLength_converted
+                )
+            )
+
     listOfRandomNumbers = sorted([random.randint(0, round(lengthToSlice + 1)) for i in range(numberOfSlices)])
     listOfRandomNumbers.append(lengthToSlice + 1)
     # "lengthToSlice+1" because otherwise, there is the risk that listOfRandomNumbers ends on :
@@ -75,10 +88,10 @@ def slice(totalLength, numberOfSlices, fixedFirstSliceLength, minimumSliceLength
     # this gives a number that is less than 'minimumValuePerSplit'
 
     listOfRandomNumbers[0] = 1
-    result = [ (j-i+minimumSliceLength)/ratio for(i,j) in zip(listOfRandomNumbers[0:numberOfSlices], listOfRandomNumbers[1:numberOfSlices+1])]
+    result = [ (j-i+minimumSliceLength_converted)/ratio for(i,j) in zip(listOfRandomNumbers[0:numberOfSlices], listOfRandomNumbers[1:numberOfSlices+1])]
 
     if (fixedFirstSliceLength != 0):
-        result.insert(0, fixedFirstSliceLength/ratio)
+        result.insert(0, fixedFirstSliceLength)
 
     return result
 
@@ -99,7 +112,7 @@ print(cash, "\t", sum(cash), "\t", myArgs.amountToSplit - sum(cash))
 
 delays=slice(totalLength          = myArgs.daysToTheEnd,
             numberOfSlices        = numberOfSplits,
-            fixedFirstSliceLength = 4,
+            fixedFirstSliceLength = 6,
             minimumSliceLength    = 2,
             )
 print(delays, "\t", sum(delays), "\t", myArgs.daysToTheEnd - sum(delays))
