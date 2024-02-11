@@ -73,7 +73,7 @@ def slice(totalLength, numberOfSlices, fixedFirstSliceLength, minimumSliceLength
 
 
 
-numberOfSplits = 7
+numberOfSplits = 3
 
 
 cash=slice( totalLength           = myArgs.amountToSplit,
@@ -85,10 +85,32 @@ cash=slice( totalLength           = myArgs.amountToSplit,
 print(cash, "\t", sum(cash), "\t", myArgs.amountToSplit - sum(cash))
 
 
-
-days=slice( totalLength           = myArgs.daysToTheEnd,
+# TODO: check that
+# - 'fixedFirstSliceLength' < amount to split
+# - numberOfSlices * minimumSliceLength < amount to split
+delays=slice(totalLength          = myArgs.daysToTheEnd,
             numberOfSlices        = numberOfSplits,
-            fixedFirstSliceLength = 13,
+            fixedFirstSliceLength = 2,
             minimumSliceLength    = 2,
             )
-print(days, "\t", sum(days), "\t", myArgs.daysToTheEnd - sum(days))
+print(delays, "\t", sum(delays), "\t", myArgs.daysToTheEnd - sum(delays))
+
+
+
+
+import datetime
+
+today = datetime.datetime.now().astimezone()
+todayPlusNDays= today + datetime.timedelta(days=27)
+#print(today.strftime('%Y-%m-%d'))
+#print(todayPlusNDays.strftime('%Y-%m-%d'))
+
+listOfPayDays=[today]
+for i in range(numberOfSplits):
+    listOfPayDays.append(listOfPayDays[i] + datetime.timedelta(days=delays[i]))
+
+print([ truc.strftime('%Y-%m-%d') for truc in listOfPayDays ])
+
+
+# TODO: display summary as a list :
+# on the <date>, pay <slice of cash>
