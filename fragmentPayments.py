@@ -131,8 +131,8 @@ listOfPayDays=[today]
 for i in range(numberOfSplits):
     listOfPayDays.append(listOfPayDays[i] + datetime.timedelta(days=delays[i]))
 
-print([ truc.strftime('%Y-%m-%d') for truc in listOfPayDays ])
 
-
-# TODO: display summary as a list :
-# on the <date>, pay <slice of cash>
+cash.insert(0,'nothing (day 0)')
+#[ print("on the {}, pay {}".format(listOfPayDays[i].strftime('%Y-%m-%d'), cash[i])) for i in range(numberOfSplits+1) ]
+print("date;amount to pay")
+[ print("{};{}".format(listOfPayDays[i].strftime('%Y-%m-%d'), cash[i])) for i in range(numberOfSplits+1) ]
